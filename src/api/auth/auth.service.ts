@@ -27,9 +27,9 @@ export class AuthService {
       throw new BadRequestException('Your account is incorrect!');
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compareSync(password, user.password);
 
-    if (!isMatch) throw new UnauthorizedException('Your account is incorrect!');
+    if (!isMatch) throw new UnauthorizedException();
 
     const payload = {
       id: user.id,
