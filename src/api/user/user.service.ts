@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
-import { User } from './entities';
 import { CreateUserDto, CreatedUserDto, GotUserDto } from './dto';
+import { User } from './entities';
 
 @Injectable()
 export class UserService {
