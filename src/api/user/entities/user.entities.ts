@@ -1,6 +1,6 @@
-import { omit } from 'ramda';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { omit } from 'ramda';
+import { Column, Entity } from 'typeorm';
 
 import { Base as BaseEntity } from 'src/common/dto';
 import { Gender, UserRole } from 'src/common/enum';
@@ -25,7 +25,7 @@ export class User extends BaseEntity {
   gender: Gender;
 
   @Column({ type: 'date', nullable: true })
-  bod: Date;
+  dob: Date;
 
   @Column({ name: 'phone_number', unique: true })
   phone: string;
@@ -33,23 +33,6 @@ export class User extends BaseEntity {
   public fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
-
-  // @BeforeInsert()
-  // private async setInsertingData(): Promise<void> {
-  //   const saltRounds = 10;
-
-  //   this.password = await hash.generateWithBcrypt({
-  //     source: this.password,
-  //     salt: saltRounds,
-  //   });
-
-  //   this.parseGenderBeforeAction();
-  // }
-
-  // @BeforeUpdate()
-  // private async setUpdatingData(): Promise<void> {
-  //   this.parseGenderBeforeAction();
-  // }
 
   public async hashPassword(): Promise<void> {
     const saltRounds = 10;

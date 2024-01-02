@@ -1,9 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
+import * as bcrypt from 'bcryptjs';
+import {
+  CreateUserDto,
+  CreatedUserDto,
+  GotUserDto,
+  ResponseUserProfile,
+} from './dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities';
-import { CreateUserDto, CreatedUserDto, GotUserDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -29,11 +36,52 @@ export class UserService {
     return createdUser.toResponse();
   }
 
+  public async getUserInfo(id: string): Promise<ResponseUserProfile> {
+    const user = await this.getDetailsById(id);
+
+    if (!user) throw new BadRequestException('Infomation of user is invalid.');
+
+    return {
+      status: 200,
+      message: 'Get profile success',
+      data: user.toResponse(),
+    };
+  }
+
+  public async updateUserById(
+    id: string,
+    data: UpdateUserDto,
+  ): Promise<ResponseUserProfile> {
+    const user = await this.getDetailsById(id);
+    const { phone, password } = data;
+
+    if (phone && phone !== user?.phone) {
+      const existedUser = await this.findOneByUsername(phone);
+
+      if (existedUser) {
+        throw new BadRequestException('User with that phone already exists.');
+      }
+    }
+
+    await this.userRepository.update(id, {
+      ...data,
+      password: password ? await bcrypt.hash(password, 10) : user.password,
+    });
+
+    const newUser = await this.getDetailsById(id);
+
+    return {
+      status: 200,
+      message: 'Update profile success',
+      data: newUser.toResponse(),
+    };
+  }
+
   public async getAll(): Promise<GotUserDto[]> {
     return await this.userRepository.find();
   }
 
-  public async getDetailsById(id: string): Promise<GotUserDto> {
+  public async getDetailsById(id: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ id });
 
     return user;

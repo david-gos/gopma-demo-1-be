@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   CreateDateColumn,
   Entity,
@@ -26,4 +27,12 @@ export class Base {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updateAt: Date;
+}
+
+export class ResponseAPI {
+  @ApiProperty({ format: '200' })
+  status: number;
+
+  @ApiProperty({ format: 'Success.' })
+  message: string;
 }
