@@ -4,14 +4,21 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
 
-import { CreateUserDto, CreatedUserDto, GotUserDto } from './dto';
-import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {
+  CreateUserDto,
+  CreatedUserDto,
+  GotUserDto,
+  ResponseUserProfile,
+  UpdateUserProfileDto,
+} from './dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
@@ -31,13 +38,22 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req): Promise<GotUserDto> {
-    return this.userService.getDetailsById(req.user.id);
+  getProfile(@Request() req): Promise<ResponseUserProfile> {
+    return this.userService.getUserInfo(req.user.id);
   }
 
   @Get(':id')
   async getById(@Param('id') id: string): Promise<GotUserDto> {
     return this.userService.getDetailsById(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('')
+  async updateUser(
+    @Body() data: UpdateUserProfileDto,
+    @Request() req,
+  ): Promise<ResponseUserProfile> {
+    return this.userService.updateUserProfileById(req.user.id, data);
   }
 
   @Delete(':id')

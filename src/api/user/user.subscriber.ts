@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcryptjs';
 import {
   DataSource,
   EntitySubscriberInterface,
@@ -5,11 +6,10 @@ import {
   InsertEvent,
   UpdateEvent,
 } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
 
-import { User } from './entities';
 import { Gender } from 'src/common/enum';
 import { entity } from 'src/utils/helpers';
+import { User } from './entities';
 
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<User> {
@@ -36,6 +36,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
         event.entity.gender = Number(Gender?.[plainGender]);
       }
     }
+    console.log(event.entity.gender);
   }
 
   async beforeUpdate(event: UpdateEvent<User>) {
@@ -43,11 +44,10 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
 
     if (gender) {
       const plainGender = gender ?? Gender[Gender.MALE];
-
       if (
         entity.isValidFieldBeforeParse({ data: Gender, value: plainGender })
       ) {
-        gender = Number(Gender?.[plainGender]);
+        event.entity.gender = Number(Gender?.[plainGender]);
       }
     }
   }

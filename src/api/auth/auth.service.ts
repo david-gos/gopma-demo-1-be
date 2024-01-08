@@ -29,7 +29,7 @@ export class AuthService {
 
     const isMatch = bcrypt.compareSync(password, user.password);
 
-    if (!isMatch) throw new UnauthorizedException();
+    if (!isMatch) throw new UnauthorizedException('Your account is incorrect!');
 
     const payload = {
       id: user.id,
@@ -38,7 +38,7 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync(payload);
 
     return {
-      accessToken,
+      data: { accessToken },
     };
   }
 }
