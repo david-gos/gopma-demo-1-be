@@ -36,6 +36,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
         event.entity.gender = Number(Gender?.[plainGender]);
       }
     }
+    console.log(event.entity.gender);
   }
 
   async beforeUpdate(event: UpdateEvent<User>) {

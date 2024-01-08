@@ -16,7 +16,7 @@ import {
   CreatedUserDto,
   GotUserDto,
   ResponseUserProfile,
-  UpdateUserDto,
+  UpdateUserProfileDto,
 } from './dto';
 import { UserService } from './user.service';
 
@@ -50,10 +50,10 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch('')
   async updateUser(
-    @Body() data: UpdateUserDto,
+    @Body() data: UpdateUserProfileDto,
     @Request() req,
   ): Promise<ResponseUserProfile> {
-    return this.userService.updateUserById(req.user.id, data);
+    return this.userService.updateUserProfileById(req.user.id, data);
   }
 
   @Delete(':id')

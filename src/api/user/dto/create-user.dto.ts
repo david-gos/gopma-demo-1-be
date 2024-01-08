@@ -1,14 +1,14 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsDate,
   IsEmail,
-  IsString,
-  MinLength,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
-  IsEnum,
-  IsDate,
   IsPhoneNumber,
+  IsString,
+  MinLength,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 import { Gender } from 'src/common/enum';
 

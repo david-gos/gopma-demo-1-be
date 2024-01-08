@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRoleProject } from 'src/api/user-role-project/entities';
 
 import { Base as BaseEntity, ResponseAPI } from 'src/common/dto';
 import { Gender } from 'src/common/enum';
@@ -27,6 +28,9 @@ export class GotUserDto extends BaseEntity {
     required: false,
   })
   bod?: Date;
+
+  @ApiProperty({ required: false })
+  roles: UserRoleProject[];
 }
 
 export class ResponseUserProfile extends ResponseAPI {

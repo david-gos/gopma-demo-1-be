@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Gender } from 'src/common/enum';
 
-export class UpdateUserDto {
+export class UpdateUserProfileDto {
   @IsNotEmpty()
   @IsOptional()
   @IsPhoneNumber('VN')

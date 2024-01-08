@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
@@ -9,7 +13,7 @@ import {
   GotUserDto,
   ResponseUserProfile,
 } from './dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { User } from './entities';
 
 @Injectable()
@@ -39,7 +43,8 @@ export class UserService {
   public async getUserInfo(id: string): Promise<ResponseUserProfile> {
     const user = await this.getDetailsById(id);
 
-    if (!user) throw new BadRequestException('Infomation of user is invalid.');
+    if (!user) throw new UnauthorizedException();
+    console.log(user);
 
     return {
       status: 200,
@@ -48,11 +53,14 @@ export class UserService {
     };
   }
 
-  public async updateUserById(
+  public async updateUserProfileById(
     id: string,
-    data: UpdateUserDto,
+    data: UpdateUserProfileDto,
   ): Promise<ResponseUserProfile> {
     const user = await this.getDetailsById(id);
+
+    if (!user) throw new BadRequestException('User is not existed.');
+
     const { phone, password } = data;
 
     if (phone && phone !== user?.phone) {
